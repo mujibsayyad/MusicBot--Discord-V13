@@ -50,12 +50,12 @@ distube
   .on('addSong', (queue, song) => {
     let playEmbed = new MessageEmbed()
       .setColor('#FFA400')
-      .setTitle(`🎵 Added to Queue `)
+      .setTitle(`🎵 Added to Queue`)
       .setThumbnail(song.thumbnail)
       .setDescription(`[${song.name}](${song.url})`)
       .addField('Requested By', `${song.user}`, true)
       .addField('Duration', `${song.formattedDuration.toString()}`, true)
-      .setFooter(song.user.displayAvatarURL({ dynamic: true }));
+      .setFooter(`Hey`, song.user.displayAvatarURL({ dynamic: true }));
 
     queue.textChannel.send({ embeds: [playEmbed] });
   })
