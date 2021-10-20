@@ -19,9 +19,9 @@ client.on('ready', () => {
   );
 });
 
-////////////////////////////// distube Events /////////////////////////////////////////////
+//// distube Events
 
-// Queue status template
+// Queue status
 const status = (queue) =>
   `Volume: \`${queue.volume}%\` | Filter: \`${
     queue.filters.join(', ') || 'Off'
@@ -37,7 +37,7 @@ const status = (queue) =>
 distube
   .on('playSong', (queue, song) => {
     let playEmbed = new MessageEmbed()
-      .setColor('BLURPLE')
+      .setColor('#FFA400')
       .setTitle(`🎵 Playing `)
       .setThumbnail(song.thumbnail)
       .setDescription(`[${song.name}](${song.url})`)
@@ -55,7 +55,7 @@ distube
       .setDescription(`[${song.name}](${song.url})`)
       .addField('Requested By', `${song.user}`, true)
       .addField('Duration', `${song.formattedDuration.toString()}`, true)
-      .setFooter(`By`, song.user.displayAvatarURL({ dynamic: true }));
+      .setFooter(song.user.displayAvatarURL({ dynamic: true }));
 
     queue.textChannel.send({ embeds: [playEmbed] });
   })
@@ -129,7 +129,7 @@ client.on('messageCreate', async (message) => {
   if (cmd === 'queue') {
     const queue = distube.getQueue(message.guildId);
 
-    let playEmbed = new MessageEmbed().setColor('#FFA400');
+    // let playEmbed = new MessageEmbed().setColor('#FFA400');
 
     if (!queue) {
       message.channel.send('Nothing playing right now!');
