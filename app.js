@@ -126,6 +126,26 @@ client.on('messageCreate', async (message) => {
     message.reply(`>>> Skipped`) && queue.skip();
   }
 
+  if (cmd === 'stop') {
+    distube.stop(message);
+    message.channel.send('Stopped the music!');
+  }
+
+  if (cmd === 'resume') distube.resume(message);
+
+  if (cmd === 'pause') distube.pause(message);
+
+  if (cmd === 'help') {
+    return message.reply(`
+  .play [play music]
+.skip [skip playing song].
+.queue [check all requested songs].
+.help  [all commands]
+.stop
+.resume
+.pause`);
+  }
+
   if (cmd === 'queue') {
     const queue = distube.getQueue(message.guildId);
 
