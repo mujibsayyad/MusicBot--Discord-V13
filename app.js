@@ -136,14 +136,25 @@ client.on('messageCreate', async (message) => {
   if (cmd === 'pause') distube.pause(message);
 
   if (cmd === 'help') {
-    return message.reply(`
-  .play [play music]
-.skip [skip playing song].
-.queue [check all requested songs].
-.help  [all commands]
-.stop
-.resume
-.pause`);
+    return message.reply({
+      embeds: [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setTitle('**Commands**')
+          .setDescription(`**>>> Bot prefix : . **`)
+          .addField(' play : ', ' Plays song ', true)
+          .addField(' skip : ', ' Skip playing song ', true)
+          .addField(' queue : ', ' check all requested songs ', true)
+          .addField(' help : ', ' all commands ', true)
+          .addField(' stop : ', ' stops playing ', true)
+          .addField(' resume :', ' resumes playing ', true)
+          .addField(' pause : ', ' Pauses playing ', true)
+          .setFooter(
+            `${message.author.username}`,
+            message.author.displayAvatarURL({ dynamic: true })
+          ),
+      ],
+    });
   }
 
   if (cmd === 'queue') {
