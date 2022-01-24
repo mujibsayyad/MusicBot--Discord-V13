@@ -31,7 +31,7 @@ const status = (queue) =>
         ? 'All Queue'
         : 'This Song'
       : 'Off'
-  }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``;
+  }\` | Autoplay: \`${(queue.autoplay = 'On')}\``;
 
 // DisTube event listeners, more in the documentation page
 distube
