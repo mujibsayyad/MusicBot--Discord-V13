@@ -13,10 +13,6 @@ const distube = new Distube(client, {
 client.on('ready', () => {
   console.log('Music is playing ...');
   client.user.setActivity('Your Songs', { type: 'PLAYING' });
-
-  distube.on('error', (channel, error) =>
-    channel.send('An error encountered: ' + error)
-  );
 });
 
 //// distube Events
@@ -65,6 +61,9 @@ distube
         playlist.songs.length
       } songs) to queue\n${status(queue)}`
     )
+  )
+  .on('error', (channel, error) =>
+    channel.send('An error encountered: ' + error)
   );
 // *************************************************************************************
 
