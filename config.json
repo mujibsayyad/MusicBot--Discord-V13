@@ -1,4 +1,6 @@
 {
-  "token": "Paste_Your_Bot_Token_Here",
-  "prefix": "."
+  "token": "PASTE_YOUR_BOT_TOKEN_HERE",
+  "guild_id": "SERVER_ID",
+  "client_id": "YOUR_BOT_ID",
+  "prefix": ","
 }

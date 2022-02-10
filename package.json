@@ -3,21 +3,25 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "Discord Music Bot V13"
+  ],
+  "author": "Mujib Sayyad",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "@discordjs/rest": "^0.3.0",
+    "@distube/yt-dlp": "^1.0.2",
     "discord.js": "^13.2.0",
-    "distube": "^3.0.1",
+    "distube": "^3.3.2",
     "ffmpeg-static": "^4.4.0",
     "libsodium-wrappers": "^0.7.9",
     "opusscript": "^0.0.8"
   },
   "engines": {
-    "node": "16.10.0"
+    "node": "16.13.1"
   }
 }
