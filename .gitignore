@@ -1,11 +1,3 @@
 node_modules
 package-lock.json
 .env
-procfile
-oldCode.js
-help.js
-pause.js
-queue.js
-resume.js
-skip.js
-stop.js
