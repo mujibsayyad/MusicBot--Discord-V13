@@ -1,7 +1,7 @@
 {
     "name": "music-bot-discord-v13",
-    "version": "1.0.0",
-    "main": "./src/bot.js",
+    "version": "2.0.0",
+    "main": "./src/index.js",
     "scripts": {
         "dev": "nodemon .",
         "start": "node ."
@@ -20,6 +20,7 @@
         "discord.js": "^14.12.1",
         "distube": "^4.0.6",
         "dotenv": "^16.3.1",
+        "glob": "^10.3.3",
         "libsodium-wrappers": "^0.7.11",
         "nodemon": "^3.0.1"
     }
