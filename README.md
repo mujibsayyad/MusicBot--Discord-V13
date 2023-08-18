@@ -9,11 +9,11 @@
 ## Installation
 
 ```
-npm install
+pnpm install
 ```
 
 ## Run the app
 
 ```
-npm start
+pnpm start
 ```

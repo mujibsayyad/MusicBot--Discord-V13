@@ -44,7 +44,7 @@ const rest = new REST({ version: '9' }).setToken(config.token);
 })();
 
 client.on('ready', () => {
-  console.log(`${client.user.tag} Music is playing ...`);
+  console.log(`${client.user.tag} is playing ...`);
 
   client.user.setActivity(`WATCHING ${client.guilds.cache.size} SERVERS`);
 });
