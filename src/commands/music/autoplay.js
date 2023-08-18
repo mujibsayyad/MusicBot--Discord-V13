@@ -4,13 +4,8 @@ const { player } = require('../..');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('play')
-        .setDescription('Play a Song.')
-        .addStringOption(opt =>
-            opt.setName('query')
-                .setDescription('Enter song name or url')
-                .setRequired(true)
-        )
+        .setName('autoplay')
+        .setDescription('Set player to autoplay.')
         .setDMPermission(false),
 
     /**
@@ -35,15 +30,15 @@ module.exports = {
                     embeds: [new EmbedBuilder().setColor('Red').setDescription(`I am already playing music in <#${guild.members.me.voice.channelId}>. Please join that channel and try again.`)]
                 });
             }
-            await player.play(vcchannel, options.getString('query'), {
-                interaction,
-                textChannel: interaction.channel,
-                member: member,
-            });
-            if(!player.getQueue(guild.id).autoplay) {
-                player.getQueue(guild.id).toggleAutoplay();
+            const queue = player.getQueue(guild.id);
+            if (!queue) {
+                return await interaction.editReply({
+                    embeds: [new EmbedBuilder().setColor('Red').setDescription("There is nothing in the queue right now!")]
+                });
             }
-            return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`Request recived. `)] })
+
+            const autoplay = queue.toggleAutoplay()
+            return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`AutoPlay: \`${autoplay ? 'On' : 'Off'}\``)] })
 
         } catch (error) {
             console.log(error);

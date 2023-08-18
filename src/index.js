@@ -50,7 +50,6 @@ client.player = player;
 
 
 
-
 require('./handler/eventHandler')(client);
 client.login(config.TOKEN)
     .then(() => {
@@ -59,3 +58,5 @@ client.login(config.TOKEN)
     .catch((err) => {
         console.log(err)
     });
+
+module.exports = { player }

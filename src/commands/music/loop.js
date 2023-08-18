@@ -4,12 +4,16 @@ const { player } = require('../..');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('play')
-        .setDescription('Play a Song.')
-        .addStringOption(opt =>
-            opt.setName('query')
-                .setDescription('Enter song name or url')
-                .setRequired(true)
+        .setName('loop')
+        .setDescription('Loop the queue.')
+        .addNumberOption(opt => opt
+            .setName('mode')
+            .addChoices(
+                { name: 'disable', value: 0, },
+                { name: 'song', value: 1 },
+                { name: 'queue', value: 2 },
+            )
+            .setRequired(true)
         )
         .setDMPermission(false),
 
@@ -35,15 +39,21 @@ module.exports = {
                     embeds: [new EmbedBuilder().setColor('Red').setDescription(`I am already playing music in <#${guild.members.me.voice.channelId}>. Please join that channel and try again.`)]
                 });
             }
-            await player.play(vcchannel, options.getString('query'), {
-                interaction,
-                textChannel: interaction.channel,
-                member: member,
-            });
-            if(!player.getQueue(guild.id).autoplay) {
-                player.getQueue(guild.id).toggleAutoplay();
+            const queue = player.getQueue(guild.id);
+            if (!queue) {
+                return await interaction.editReply({
+                    embeds: [new EmbedBuilder().setColor('Red').setDescription("There is nothing in the queue right now!")]
+                });
             }
-            return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`Request recived. `)] })
+            console.log(queue.repeatMode == options.getNumber('mode'));
+            if (queue.repeatMode !== options.getNumber('mode')) {
+                queue.setRepeatMode(options.getNumber('mode'))
+                const modetype = options.getNumber('mode') = options.getNumber('mode') ? (options.getNumber('mode') === 2 ? 'Repeat queue' : 'Repeat song') : 'Off'
+
+                return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`Set repeat mode to \`${modetype}\``)] })
+            } else {
+                return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setDescription(`Repeat mode is already set to \`${options.getNumber('mode')}\` `)] })
+            }
 
         } catch (error) {
             console.log(error);

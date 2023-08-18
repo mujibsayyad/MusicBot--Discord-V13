@@ -4,13 +4,8 @@ const { player } = require('../..');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('play')
-        .setDescription('Play a Song.')
-        .addStringOption(opt =>
-            opt.setName('query')
-                .setDescription('Enter song name or url')
-                .setRequired(true)
-        )
+        .setName('pause')
+        .setDescription('Pause playing song.')
         .setDMPermission(false),
 
     /**
@@ -22,7 +17,7 @@ module.exports = {
         interaction.deferReply();
         try {
 
-            const { options, member, guild } = interaction;
+            const { member, guild } = interaction;
 
             const vcchannel = member?.voice?.channel;
             if (!vcchannel) {
@@ -35,15 +30,18 @@ module.exports = {
                     embeds: [new EmbedBuilder().setColor('Red').setDescription(`I am already playing music in <#${guild.members.me.voice.channelId}>. Please join that channel and try again.`)]
                 });
             }
-            await player.play(vcchannel, options.getString('query'), {
-                interaction,
-                textChannel: interaction.channel,
-                member: member,
-            });
-            if(!player.getQueue(guild.id).autoplay) {
-                player.getQueue(guild.id).toggleAutoplay();
+            const queue = player.getQueue(guild.id);
+            if (!queue) {
+                return await interaction.editReply({
+                    embeds: [new EmbedBuilder().setColor('Red').setDescription("There is nothing in the queue right now!")]
+                });
             }
-            return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`Request recived. `)] })
+            if (queue.playing) {
+                queue.pause();
+                return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`Paused the song for you :)`)] })
+            } else {
+                return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setDescription(`The queue is already paused!`)] })
+            }
 
         } catch (error) {
             console.log(error);
