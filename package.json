@@ -4,7 +4,7 @@
     "main": "./src/index.js",
     "scripts": {
         "dev": "nodemon .",
-        "start": "node ."
+        "start": "node ./src/index.js"
     },
     "keywords": [
         "Discord Music Bot V13"
@@ -24,5 +24,8 @@
         "libsodium-wrappers": "^0.7.11",
         "nodemon": "^3.0.1",
         "opusscript": "^0.1.0"
+    }
+    "engines": {
+    "node": "18.12.1"
     }
 }
