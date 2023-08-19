@@ -9,7 +9,7 @@ module.exports = async (client) => {
 
     const events = new Array();
     
-    const files = await loadFiles('events');
+    const files = await loadFiles('src/events');
     for (const file of files) {
         try {
             const event = require(file);

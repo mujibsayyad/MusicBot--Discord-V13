@@ -1,21 +1,19 @@
 /* eslint-disable no-process-env */
+const { SpotifyPlugin } = require('@distube/spotify');
+const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
+const { ExtractorPlugin } = require('distube');
 const { DisTube } = require('distube');
-const { Guilds, GuildMembers, GuildMessages } = GatewayIntentBits;
+const { Guilds,GuildVoiceStates, GuildMembers, GuildMessages } = GatewayIntentBits;
 const { User, ThreadMember, Message, GuildMember } = Partials;
 
 require('dotenv/config');
-const config = {
-    TOKEN: process.env.TOKEN,
-    PRIVATEGUILD: process.env.PRIVATEGUILD ? process.env.PRIVATEGUILD : null,
-    CLIENTID: process.env.CLIENTID ? process.env.CLIENTID : null,
-};
-
 const client = new Client({
     intents: [
         Guilds,
         GuildMembers,
         GuildMessages,
+        GuildVoiceStates
     ],
     partials: [
         User,
@@ -28,7 +26,6 @@ const client = new Client({
 
 client.commands = new Collection();
 client.events = new Map();
-client.config = config;
 
 const player = new DisTube(client, {
     emptyCooldown: 1000 * 60,
@@ -41,6 +38,7 @@ const player = new DisTube(client, {
         new SpotifyPlugin({
             emitEventsAfterFetching: true
         }),
+        new ExtractorPlugin(),
         new YtDlpPlugin()
     ]
 });
@@ -51,7 +49,8 @@ client.player = player;
 
 
 require('./handler/eventHandler')(client);
-client.login(config.TOKEN)
+require('./handler/distubeeventshandler')(client,player)
+client.login(process.env.TOKEN)
     .then(() => {
         require('./handler/commandHandler')(client);
     })

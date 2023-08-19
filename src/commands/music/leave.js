@@ -4,8 +4,8 @@ const { player } = require('../..');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('stop')
-        .setDescription('Stop playing music.')
+        .setName('leave')
+        .setDescription('Leave vc')
         .setDMPermission(false),
 
     /**
@@ -14,7 +14,7 @@ module.exports = {
      * @param {EmbedBuilder} EmbedBuilder embed bind
      */
     async execute(interaction, client) {
-        interaction.deferReply();
+        await await interaction.deferReply({fetchReply:true});
         try {
 
             const { member, guild } = interaction;
@@ -23,6 +23,11 @@ module.exports = {
             if (!vcchannel) {
                 return await interaction.editReply({
                     embeds: [new EmbedBuilder().setColor('Red').setDescription("You need to be in a voice channel to use this command")]
+                });
+            }
+            if (!guild.members.me.voice.channelId) {
+                return await interaction.editReply({
+                    embeds: [new EmbedBuilder().setColor('Red').setDescription(`I am not in vc to use this cmd`)]
                 });
             }
             if (guild.members.me.voice.channelId && vcchannel.id !== guild.members.me.voice.channelId) {

@@ -1,18 +1,25 @@
+const { Client } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
-
+const { DisTube } = require("distube");
+/**
+ * 
+ * @param {Client} client client
+ * @param {DisTube} player distube
+ */
 module.exports = (client, player) => {
-    const embed = new EmbedBuilder().setColor('Random')
+    const embed = new EmbedBuilder().setColor('Random');
     const status = queue =>
         `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.names.join(', ') || 'Off'}\` | Loop: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All Queue' : 'This Song') : 'Off'
         }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``
     player
-        .on('playSong', (queue, song) =>
+        .on('playSong', (queue, song) => {
+            // queue.autoplay ?? queue.toggleAutoplay();
             queue.textChannel.send({
-                embeds: [embed.setDescription(` | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user
+                embeds: [embed.setDescription(`🎶 | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user
                     }\n${status(queue)}`)
                 ]
             })
-        )
+        })
         .on('addSong', (queue, song) =>
             queue.textChannel.send({
                 embeds: [embed.setDescription(
@@ -23,7 +30,7 @@ module.exports = (client, player) => {
         .on('addList', (queue, playlist) =>
             queue.textChannel.send({
                 embeds: [embed.setDescription(
-                    `| Added \`${playlist.name}\` playlist (${playlist.songs.length
+                    `🎶 | Added \`${playlist.name}\` playlist (${playlist.songs.length
                     } songs) to queue\n${status(queue)}`)
                 ]
             })
@@ -37,7 +44,7 @@ module.exports = (client, player) => {
         }))
         .on('searchNoResult', (interaction, query) =>
             interaction.channel.send({
-                embeds: [embed.setDescription(` | No result found for \`${query}\`!`)
+                embeds: [embed.setDescription(` No result found for \`${query}\`!`)
                 ]
             })
         )

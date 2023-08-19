@@ -14,7 +14,7 @@ module.exports = {
      * @param {EmbedBuilder} EmbedBuilder embed bind
      */
     async execute(interaction, client) {
-        interaction.deferReply();
+        await interaction.deferReply({fetchReply:true});
         try {
 
             const { options, member, guild } = interaction;

@@ -8,6 +8,7 @@ module.exports = {
         .setDescription('Loop the queue.')
         .addNumberOption(opt => opt
             .setName('mode')
+            .setDescription('Select mode.')
             .addChoices(
                 { name: 'disable', value: 0, },
                 { name: 'song', value: 1 },
@@ -23,7 +24,7 @@ module.exports = {
      * @param {EmbedBuilder} EmbedBuilder embed bind
      */
     async execute(interaction, client) {
-        interaction.deferReply();
+        await interaction.deferReply({fetchReply:true});
         try {
 
             const { options, member, guild } = interaction;
@@ -45,14 +46,13 @@ module.exports = {
                     embeds: [new EmbedBuilder().setColor('Red').setDescription("There is nothing in the queue right now!")]
                 });
             }
-            console.log(queue.repeatMode == options.getNumber('mode'));
-            if (queue.repeatMode !== options.getNumber('mode')) {
-                queue.setRepeatMode(options.getNumber('mode'))
-                const modetype = options.getNumber('mode') = options.getNumber('mode') ? (options.getNumber('mode') === 2 ? 'Repeat queue' : 'Repeat song') : 'Off'
-
+            const modetoset = options.getNumber('mode');
+            const modetype = modetoset === 0 ? 'Off' : modetoset === 2 ? 'Repeat queue' : 'Repeat song';
+            if (queue.repeatMode !== modetoset) {
+                queue.setRepeatMode(modetoset)
                 return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Random').setDescription(`Set repeat mode to \`${modetype}\``)] })
             } else {
-                return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setDescription(`Repeat mode is already set to \`${options.getNumber('mode')}\` `)] })
+                return await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setDescription(`Repeat mode is already set to \`${modetype}\` `)] })
             }
 
         } catch (error) {

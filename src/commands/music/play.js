@@ -1,6 +1,9 @@
 const { GuildMember } = require('discord.js');
 const { Client, EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 const { player } = require('../..');
+const { Playlist } = require('distube');
+const { SearchResultType } = require('distube');
+const { SearchResultPlaylist } = require('distube');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,7 +22,7 @@ module.exports = {
      * @param {EmbedBuilder} EmbedBuilder embed bind
      */
     async execute(interaction, client) {
-        interaction.deferReply();
+        await interaction.deferReply({ fetchReply: true });
         try {
 
             const { options, member, guild } = interaction;
@@ -35,11 +38,34 @@ module.exports = {
                     embeds: [new EmbedBuilder().setColor('Red').setDescription(`I am already playing music in <#${guild.members.me.voice.channelId}>. Please join that channel and try again.`)]
                 });
             }
-            await player.play(vcchannel, options.getString('query'), {
-                interaction,
-                textChannel: interaction.channel,
-                member: member,
-            });
+            const query = options.getString('query')
+            const playlistPattern = /^.*(list=)([^#\&\?]*).*/;
+            if (playlistPattern.test(query)) {
+
+            const results = await player.search(query,{type:'playlist'});
+                if (!results) {
+                    return await interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(`No Result Found`)
+                        ]
+                    })
+                }
+
+                await player.play(vcchannel, results, {
+                    interaction,
+                    textChannel: interaction.channel,
+                    member: member,
+                })
+
+            } else {
+                await player.play(vcchannel, query, {
+                    interaction,
+                    textChannel: interaction.channel,
+                    member: member,
+                });
+            }
             if(!player.getQueue(guild.id).autoplay) {
                 player.getQueue(guild.id).toggleAutoplay();
             }
