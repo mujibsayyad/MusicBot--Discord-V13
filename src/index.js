@@ -29,9 +29,8 @@ client.events = new Map();
 
 const player = new DisTube(client, {
     emptyCooldown: 1000 * 60,
-    leaveOnEmpty: true,
-    leaveOnFinish: true,
-    emitNewSongOnly: true,
+
+    emitNewSongOnly: false,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     plugins: [

@@ -12,29 +12,51 @@ module.exports = (client, player) => {
         `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.names.join(', ') || 'Off'}\` | Loop: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All Queue' : 'This Song') : 'Off'
         }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``
     player
-        .on('playSong', (queue, song) => {
-            // queue.autoplay ?? queue.toggleAutoplay();
-            queue.textChannel.send({
-                embeds: [embed.setDescription(`🎶 | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user
-                    }\n${status(queue)}`)
-                ]
+        .on('playSong', async (queue, song) => {
+            if (!queue.autoplay) {
+                queue.toggleAutoplay();
+            }
+            let playEmbed = new EmbedBuilder()
+                .setColor('Random')
+                .setTitle(`🎵 Playing `)
+                .setThumbnail(song.thumbnail)
+                .setDescription([
+                    `[${song.name}](${song.url})`,
+                    `**Requested By**: ${song.user}`,
+                    `**Duration**: ${song.formattedDuration.toString()}`,
+                    status(queue)
+                ].join('\n'))
+                .setTimestamp();
+            await queue.textChannel.send({
+                embeds: [playEmbed]
             })
         })
-        .on('addSong', (queue, song) =>
-            queue.textChannel.send({
-                embeds: [embed.setDescription(
-                    `| Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)
-                ]
+        .on('addSong', async (queue, song) => {
+
+            const playEmbed = new EmbedBuilder()
+                .setColor('Random')
+                .setTitle(`🎵 Added to Queue `)
+                .setThumbnail(song.thumbnail)
+                .setDescription([
+                    `[${song.name}](${song.url})`,
+                    `**Added By**: ${song.user}`,
+                    `**Duration**: ${song.formattedDuration.toString()}`,
+                    status(queue)
+                ].join('\n'))
+                .setTimestamp();
+
+            await queue.textChannel.send({
+                embeds: [playEmbed]
             })
-        )
-        .on('addList', (queue, playlist) =>
-            queue.textChannel.send({
+        })
+        .on('addList', async (queue, playlist) => {
+            await queue.textChannel.send({
                 embeds: [embed.setDescription(
                     `🎶 | Added \`${playlist.name}\` playlist (${playlist.songs.length
                     } songs) to queue\n${status(queue)}`)
                 ]
             })
-        )
+        })
         .on('error', (channel, e) => {
             console.error(e)
         })
@@ -42,8 +64,8 @@ module.exports = (client, player) => {
             embeds: [embed.setDescription('Voice channel is empty! Leaving soon...')
             ]
         }))
-        .on('searchNoResult', (interaction, query) =>
-            interaction.channel.send({
+        .on('searchNoResult', async (interaction, query) =>
+            await interaction.channel.send({
                 embeds: [embed.setDescription(` No result found for \`${query}\`!`)
                 ]
             })
